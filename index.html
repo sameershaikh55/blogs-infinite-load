@@ -97,7 +97,9 @@
 		<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 		<script>
-			AOS.init();
+			AOS.init({
+				once: true,
+			});
 
 			var markInstance = new Mark(document.querySelector("#blog_list"));
 			var keywordInput = document.querySelector("input[name='keyword']");
