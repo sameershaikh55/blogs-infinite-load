@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- == EXTERNAL LINKS START == -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+			crossorigin="anonymous"
+		/>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+			crossorigin="anonymous"
+		></script>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css"
+		/>
+		<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+		<link rel="stylesheet" href="./assets/css/style.css" />
+		<!-- == EXTERNAL LINKS END == -->
+		<title>Blogs</title>
+	</head>
+	<body>
+		<!-- ============ LOADER START =============== -->
+		<div class="spinner_container">
+			<div class="spinner-grow" role="status"></div>
+		</div>
+		<!-- ============ LOADER END =============== -->
+
+		<div class="loader_off">
+			<!-- ============ HEADER START =============== -->
+			<div
+				data-aos="fade"
+				class="
+					header_container
+					d-flex
+					flex-column
+					justify-content-center
+					align-items-center
+					py-4
+				"
+			>
+				<img
+					src="https://chamelecoin.leketest.cz/wp-content/uploads/2021/12/cropped-logo-2.png"
+					alt=""
+				/>
+				<h1 class="mb-0 fw-bold">Chamelecoin</h1>
+				<!-- <p class="fw-bold text-secondary f18">Your crypto news hub</p> -->
+				<p class="fw-bold text-secondary f18">Your crypto news Inflation</p>
+			</div>
+			<!-- ============ HEADER END =============== -->
+
+			<!-- ============ BODY START =============== -->
+			<div data-aos="fade" class="body_container py-5">
+				<div class="inner_body_container bg-white py-5">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-11 mx-auto">
+								<div class="row">
+									<div class="col-12">
+										<input
+											type="text"
+											class="w-100 px-3"
+											placeholder="Search by keyword ..."
+											name="keyword"
+										/>
+										<!-- onkeyup="valInpt(this.value)" -->
+									</div>
+								</div>
+
+								<div data-aos="fade" id="blog_list" class="row mt-1 gy-5"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- ============ BODY END =============== -->
+		</div>
+
+		<!-- ============ SCRIPT =============== -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
+		<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+		<script>
+			AOS.init();
+
+			var markInstance = new Mark(document.querySelector("#blog_list"));
+			var keywordInput = document.querySelector("input[name='keyword']");
+
+			// Your web app's Firebase configuration
+			const firebaseConfig = {
+				apiKey: "AIzaSyBYVdK4rPKwF9MemEQtWRtvwnt7lWyOD5g",
+				authDomain: "chamelecoin.firebaseapp.com",
+				projectId: "chamelecoin",
+				storageBucket: "chamelecoin.appspot.com",
+				messagingSenderId: "233553182651",
+				appId: "1:233553182651:web:f8e87b46dc4bad9d7c8e9e",
+			};
+			// Initialize Firebase
+			firebase.initializeApp(firebaseConfig);
+
+			// DATABASE VARIBLE
+			let db = firebase.firestore();
+			var myHilitor;
+			var dataToLoad = [];
+
+			// BLOGS DATA
+			var blogsData = [];
+
+			// FILTERED DATA GLOBAL
+			let filteredData;
+
+			// APPEDNING DATA FUNCTION
+			function appendingData(data) {
+				$.each(data, function (key, value) {
+					$("#blog_list").append(`
+													<div class="col-12" data-aos="fade">
+															<div class="d-flex align-items-start">
+																<img
+																	src="https://www.google.com/s2/favicons?domain_url=http…-the-graph-foundation-to-support-ecosystem-growth"
+																	alt=""
+																/>
+																<h6 class="ms-2 fw-bold f18">
+																	${value.title}
+																</h6>
+															</div>
+															<p class="mt-2 mb-2">
+																${value.description}
+															</p>
+															<div class="d-flex w-100 justify-content-between">
+																<p class="small">${value.url}</p>
+																<p class="small">${value.publish_date}</p>
+															</div>
+
+															<div
+																class="
+																	d-flex
+																	align-items-center
+																	w-100
+																	justify-content-between
+																"
+															>
+																<div class="share_icons">
+																	<a href="${value.facebook}">
+																		<img
+																			src="https://chamelecoin.leketest.cz/wp-content/plugins/cm-rss-aggregator-pro/assets/img/facebook.png"
+																		/>
+																	</a>
+																	<a href="${value.twitter}">
+																		<img
+																			src="https://chamelecoin.leketest.cz/wp-content/plugins/cm-rss-aggregator-pro/assets/img/twitter.png"
+																		/>
+																	</a>
+																	<a href="${value.google}">
+																		<img
+																			src="https://chamelecoin.leketest.cz/wp-content/plugins/cm-rss-aggregator-pro/assets/img/google+.png"
+																		/>
+																	</a>
+																	<a href="${value.reddit}">
+																		<img
+																			src="https://chamelecoin.leketest.cz/wp-content/plugins/cm-rss-aggregator-pro/assets/img/reddit.png"
+																		/>
+																	</a>
+																</div>
+																<p class="d-flex align-items-center mb-0">
+																	<span class="me-1"> Like </span>
+																	<img
+																		class="like_icon"
+																		src="https://chamelecoin.leketest.cz/wp-content/plugins/cm-rss-aggregator-pro/assets/img/like.png"
+																		alt=""
+																	/>
+																	<span class="ms-1"> ${value.like} </span>
+																</p>
+															</div>
+														</div>`);
+				});
+			}
+
+			// ONCHANGE FUNCTION
+			function performMark() {
+				// Read the keyword
+				var keyword = keywordInput.value;
+				// inpValG = keyword;
+
+				// FILTER METHOD TO SORT
+				filteredData = blogsData.filter((item) => {
+					return (
+						(item.title !== undefined &&
+							item.title.toLowerCase().includes(keyword.toLowerCase())) ||
+						item.description.toLowerCase().includes(keyword.toLowerCase()) ||
+						""
+					);
+				});
+
+				$("#blog_list .col-12").remove();
+				appendingData(filteredData);
+
+				// Remove previous marked elements and mark
+				// the new keyword inside the context
+				markInstance.unmark({
+					done: function () {
+						markInstance.mark(keyword);
+					},
+				});
+			}
+
+			// Listen to input and option changes
+			keywordInput.addEventListener("input", performMark);
+
+			// LOAD DATA ON SCROLL
+			$(window).scroll(function () {
+				if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
+					if (keywordInput.value.length === 0) {
+						blogsData = [];
+						[1, 1].map(() => {
+							blogsData.push(...dataToLoad);
+						});
+						appendingData(blogsData);
+					} else {
+						blogsData = [];
+						[1, 1].map(() => {
+							blogsData.push(...filteredData);
+						});
+						appendingData(blogsData);
+
+						markInstance.unmark({
+							done: function () {
+								markInstance.mark(keywordInput.value);
+							},
+						});
+					}
+				}
+			});
+
+			// GETTING DATA BY HITTING AN API
+			function getData() {
+				document.body.style.overflow = "hidden";
+
+				db.collection("blogs")
+					.get()
+					.then((querySnapshot) => {
+						document.querySelector(".spinner_container").style.display = "none";
+						document.querySelector(".loader_off").style.opacity = "1";
+						document.body.style.overflow = "auto";
+
+						var gettingBlogsData = [];
+						querySnapshot.forEach((doc) => {
+							gettingBlogsData.push(doc.data());
+						});
+
+						dataToLoad = [...gettingBlogsData, ...gettingBlogsData];
+
+						blogsData = [
+							...gettingBlogsData,
+							...gettingBlogsData,
+							...gettingBlogsData,
+							...gettingBlogsData,
+						];
+
+						appendingData(blogsData);
+					});
+			}
+
+			// CALLING AN API ON LOAD
+			window.onload = getData();
+		</script>
+	</body>
+</html>
